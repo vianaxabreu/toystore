@@ -49,13 +49,14 @@ def submit_order():
         # Respond to preflight requests
         return jsonify({"status": "ok"}), 200 # Add status code 200
     data = request.get_json()
-    # id    full_name   email   order_number    message
+    # id	full_name	order_number	total_price	total_quantity items
     values = [[
         data.get("id"),
         data.get("full_name"),
-        data.get("email"),
         data.get("order_number"),
-        data.get("message")
+        data.get("total_price"),
+        data.get("total_quantity"),
+        data.get("items")
     ]]
 
     body = {"values": values}

@@ -117,7 +117,7 @@ checkoutButton.addEventListener('click', async (event) => {
     full_name: "Guest Checkout", // Replace with actual user input if available
     email: "",                   // Optional: get from user form if needed
     order_number: `#${Math.floor(Math.random() * 100000)}`,
-    message: JSON.stringify(cart), // Send cart items as a JSON string
+    items: JSON.stringify(cart), // Send cart items as a JSON string
     total_price: totalPrice,
     total_quantity: totalQuantity
   };
