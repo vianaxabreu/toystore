@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  api:
+    build: ./api
+    container_name: flask_api
+    ports:
+      - "5002:5002"
+    networks:
+      - my-network
+
+  web:
+    build: ./web
+    container_name: static_site
+    ports:
+      - "8080:80"
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
