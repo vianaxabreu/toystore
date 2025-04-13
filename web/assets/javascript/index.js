@@ -97,18 +97,60 @@ if (contactForm) {
 }
 
 const checkoutButton = document.getElementById('checkout-button')
-checkoutButton.addEventListener('click', (event) => {
+checkoutButton.addEventListener('click', async (event) => {
+  const cart = cartLS.list();
+  const totalPrice = cartLS.total();
+  const totalQuantity = cart.reduce((prev, curr) => prev + curr.quantity, 0);
+
+  // Push to dataLayer
   dataLayer.push({
     event: 'goToCheckout',
     location: 'cart',
-    cart: cartLS.list(),
-    totalPrice: cartLS.total(),
-    totalQuantity: cartLS.list().reduce((prev, curr) => prev + curr.quantity, 0)
-  })
-  cartLS.destroy()
-  const modal = bootstrap.Modal.getInstance('#cartModal')
-  modal.hide()
-})
+    cart,
+    totalPrice,
+    totalQuantity
+  });
+
+  // Prepare data to send
+  const payload = {
+    id: `order_${Date.now()}`, // Optional: unique order ID
+    full_name: "Guest Checkout", // Replace with actual user input if available
+    email: "",                   // Optional: get from user form if needed
+    order_number: `#${Math.floor(Math.random() * 100000)}`,
+    message: JSON.stringify(cart), // Send cart items as a JSON string
+    total_price: totalPrice,
+    total_quantity: totalQuantity
+  };
+
+  const API_URL =
+    window.location.hostname === "localhost"
+      ? "http://localhost:5002"
+      : "http://flask_api:5002";
+
+  try {
+    const response = await fetch(`${API_URL}/submit_order`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (response.ok) {
+      alert('Checkout submitted successfully!');
+      cartLS.destroy(); // Clear the cart
+      const modal = bootstrap.Modal.getInstance('#cartModal');
+      modal.hide();
+    } else {
+      const errorData = await response.json();
+      alert(errorData.message || 'Failed to submit checkout.');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('An error occurred: ' + error.message);
+  }
+});
+
 
 const cards = document.querySelectorAll('.card-hover')
 cards.forEach((card) => {
@@ -136,7 +178,7 @@ form.addEventListener('submit', async function (e) {
   });
 
   try {
-    const response = await fetch(`${API_URL}/submit`, { // Use container name and internal port
+    const response = await fetch(`${API_URL}/submit_form`, { // Use container name and internal port
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

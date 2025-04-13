@@ -10,13 +10,41 @@ CORS(app) # Enable CORS for all routes
 config = toml.load(".env.toml")
 CRED = config["google_credentials"]
 SHEET_ID = config["sheet_id"]["sheet_id"]
-range_name = "Form!A2:E5"
+
 
 ms = MyGsheet(cred=CRED)
 ms.initialize_service()
 
-@app.route('/submit', methods=['POST', 'OPTIONS'])
+@app.route('/submit_form', methods=['POST', 'OPTIONS'])
 def submit():
+    range_name = "Form!A2:E5"
+    if request.method == 'OPTIONS':
+        # Respond to preflight requests
+        return jsonify({"status": "ok"}), 200 # Add status code 200
+    data = request.get_json()
+    # id    full_name   email   order_number    message
+    values = [[
+        data.get("id"),
+        data.get("full_name"),
+        data.get("email"),
+        data.get("order_number"),
+        data.get("message")
+    ]]
+
+    body = {"values": values}
+
+    ms.service.spreadsheets().values().append(
+        spreadsheetId=SHEET_ID,
+        range=range_name,
+        valueInputOption="USER_ENTERED",
+        body=body
+    ).execute()
+
+    return jsonify({"status": "success"})
+
+@app.route('/submit_order', methods=['POST', 'OPTIONS'])
+def submit_order():
+    range_name = "Order!A2:E5"
     if request.method == 'OPTIONS':
         # Respond to preflight requests
         return jsonify({"status": "ok"}), 200 # Add status code 200
