@@ -10,7 +10,8 @@ class MyGsheet:
 
     
     def initialize_service(self):
-        credentials = service_account.Credentials.from_service_account_info(self.cred)
+        # credentials = service_account.Credentials.from_service_account_info(self.cred)
+        credentials = self.cred
         try:
             service = build("sheets", "v4", credentials=credentials)
         except:
