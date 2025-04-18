@@ -1,5 +1,0 @@
-google-auth
-google-api-python-client
-flask
-flask_cors
-toml
