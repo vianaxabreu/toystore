@@ -124,8 +124,11 @@ checkoutButton.addEventListener('click', async (event) => {
 
   const API_URL =
     window.location.hostname === "localhost"
-      ? "http://localhost:5002"
-      : "http://flask_api:5002";
+      //? "http://localhost:5002"
+      //: "http://flask_api:5002";
+      //https://toystore-api-1060040484747.europe-west10.run.app
+      ? "https://toystore-api-1060040484747.europe-west10.run.app"
+      : "https://toystore-api-1060040484747.europe-west10.run.app";
 
   try {
     const response = await fetch(`${API_URL}/submit_order`, {

@@ -2,15 +2,19 @@ from flask import Flask, request, jsonify
 from support.my_sheet import MyGsheet
 import toml
 from flask_cors import CORS
+from google.auth import default
+import os # used if in cloud run
 
 app = Flask(__name__)
 CORS(app) # Enable CORS for all routes
 
 # get credentials
-config = toml.load(".env.toml")
-CRED = config["google_credentials"]
-SHEET_ID = config["sheet_id"]["sheet_id"]
+# config = toml.load(".env.toml") not required if cloud run
+# CRED = config["google_credentials"]
+# SHEET_ID = config["sheet_id"]["sheet_id"]
 
+CRED, _ = default()
+SHEET_ID = os.getenv("sheet_id")
 
 ms = MyGsheet(cred=CRED)
 ms.initialize_service()
