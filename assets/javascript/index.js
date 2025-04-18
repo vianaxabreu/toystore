@@ -171,8 +171,10 @@ form.addEventListener('submit', async function (e) {
 
   const API_URL =
   window.location.hostname === "localhost"
-    ? "http://localhost:5002"
-    : "http://flask_api:5002"; // fallback for Docker-internal calls
+    // ? "http://localhost:5002"
+    // : "http://flask_api:5002"; // fallback for Docker-internal calls
+    ? "https://toystore-api-1060040484747.europe-west10.run.app"
+    : "https://toystore-api-1060040484747.europe-west10.run.app";
   const formData = new FormData(form);
   const data = {};
 
