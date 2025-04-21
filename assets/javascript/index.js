@@ -140,7 +140,7 @@ checkoutButton.addEventListener('click', async (event) => {
     });
 
     if (response.ok) {
-      alert('Checkout submitted successfully!');
+      alert(`Checkout submitted successfully! Your order number is ${payload.order_number}`);
       cartLS.destroy(); // Clear the cart
       const modal = bootstrap.Modal.getInstance('#cartModal');
       modal.hide();
@@ -192,11 +192,11 @@ form.addEventListener('submit', async function (e) {
     });
 
     if (response.ok) {
-      alert('Message sent successfully!');
+      alert(`Message sent successfully! Thank you, ${data.full_name}!`);
       form.reset();
     } else {
       const errorData = await response.json();
-      alert(errorData.message || 'Failed to send message.');
+      alert(errorData.message || `Failed to send message. Try again, ${data.full_name}!`);
     }
   } catch (error) {
     console.error('Error:', error);
